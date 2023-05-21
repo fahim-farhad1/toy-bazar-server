@@ -31,18 +31,27 @@ async function run() {
 
     const toyCollection = client.db('ToyBazar').collection('Toys');
 
-    app.get('/toys', async(req, res) =>{
+    app.get('/allToys', async(req, res) =>{
       const cursor = toyCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     })
 
-    app.get('/toys/:id', async(req, res) =>{
+    app.get('/allToys/:id', async(req, res) =>{
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
       const result = await toyCollection.findOne(query);
       res.send(result);
     })
+    app.get('/toys', async(req, res) =>{
+      let query = {};
+      if(req.query.category){
+        query = {category: req.query.category};
+      }
+      const result = await toyCollection.find(query).toArray();
+      res.send(result);
+    })
+
 
 
     // Send a ping to confirm a successful connection
